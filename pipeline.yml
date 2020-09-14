@@ -4,8 +4,6 @@ pattern:
     fastq1: "_R1_001.fastq.gz"
     fastq2: "_R2_001.fastq.gz"
 
-gtf: "/ifs/obds-training/sep20/shared/week3/salmon/gencode.v31.primary_assembly.annotation.gtf.gz"
-
 alevin:
     index: "/ifs/obds-training/sep20/shared/week3/salmon/salmon_index"
     tx2gene: "/ifs/obds-training/sep20/shared/week3/salmon/txp2gene.tsv"
