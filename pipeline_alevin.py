@@ -70,25 +70,22 @@ PARAMS = P.get_parameters(
     ["%s/pipeline.yml" % os.path.splitext(__file__)[0],
      "../pipeline.yml",
      "pipeline.yml"])
-print(PARAMS)
+
 
 SAMPLES = pd.read_csv("samples.csv")
 SAMPLES.set_index('name', inplace=True)
 
+
 def get_gex_fastq(dir):
     '''Docstring'''
     fastq1_pattern = PARAMS["pattern"]["fastq1"]
-    # print(fastq1_pattern)
     fastq1_glob = f"{dir}/*{fastq1_pattern}*"
-    # print(fastq1_glob)
     fastq1 = glob.glob(fastq1_glob)
-    # print(fastq1)
 
     if len(fastq1) == 0:
         raise OSError(f"No file matched pattern: {fastq1_glob}")
 
     fastq2 = [file.replace(PARAMS["pattern"]["fastq1"], PARAMS["pattern"]["fastq2"]) for file in fastq1]
-    # print(fastq2)
 
     for file in fastq2:
         if not os.path.exists(file):
