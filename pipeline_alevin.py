@@ -71,6 +71,9 @@ PARAMS = P.get_parameters(
      "../pipeline.yml",
      "pipeline.yml"])
 
+# prints date and time, e.g. '2020-07-14T10:03:08'
+DATETIME = "date +'%Y-%m-%dT%H:%M:%S'"
+
 
 SAMPLES = pd.read_csv("samples.csv")
 SAMPLES.set_index('name', inplace=True)
@@ -95,15 +98,17 @@ def get_gex_fastq(dir):
 
 
 @follows(mkdir("alevin"))
-@transform("data/*_fastqs",
-           regex(r"data/([A-Za-z0-9_]*)_fastqs"),
+@transform("data/*/.sample",
+           regex(r"data/([A-Za-z0-9_]+)/.sample"),
            r"alevin/\1.done")
 def salmon_alevin(infile, outfile):
     '''Docstring'''
 
-    sample = re.search('data/(.*)_fastqs', infile).group(1)
+    sample = re.search('data/([A-Za-z0-9_]+)/.sample', infile).group(1)
 
-    fastqs = get_gex_fastq(infile)
+    fastqs_dir = SAMPLES['fastqs'][sample]
+
+    fastqs = get_gex_fastq(fastqs_dir)
     fastq1s = " ".join(fastqs["fastq1"])
     fastq2s = " ".join(fastqs["fastq2"])
 
@@ -123,10 +128,13 @@ def salmon_alevin(infile, outfile):
 
     tx2gene = PARAMS["alevin"]["tx2gene"]
 
+    datetime = DATETIME
+
     job_threads = PARAMS["alevin"]["threads"]
     job_memory = PARAMS["alevin"]["memory"]
 
     statement = """
+    %(datetime)s > alevin/%(sample)s.time &&
     salmon alevin
         -l ISR
         -1 %(fastq1s)s
@@ -137,6 +145,7 @@ def salmon_alevin(infile, outfile):
         -o %(outdir)s
         --tgMap %(tx2gene)s
         --expectCells %(cells)s
+        %(datetime)s >> alevin/%(sample)s.time
     """
 
     P.run(statement)
