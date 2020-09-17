@@ -4,8 +4,12 @@ pattern:
     fastq1: "_R1_001.fastq.gz"
     fastq2: "_R2_001.fastq.gz"
 
-alevin:
-    index: "/ifs/obds-training/sep20/shared/week3/salmon/salmon_index"
-    tx2gene: "/ifs/obds-training/sep20/shared/week3/salmon/txp2gene.tsv"
-    threads: 10
-    memory: "2G"
+salmon:
+    alevin:
+        index: "/ifs/obds-training/sep20/shared/week3/salmon/salmon_index"
+        tx2gene: "/ifs/obds-training/sep20/shared/week3/salmon/txp2gene.tsv"
+        threads: 20
+        memory: "2G"
+
+conda:
+    salmon: "salmon"

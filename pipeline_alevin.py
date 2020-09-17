@@ -124,14 +124,14 @@ def salmon_alevin(infile, outfile):
     else:
         raise NameError('Invalid chemistry.')
 
-    salmon_index = PARAMS["alevin"]["index"]
+    salmon_index = PARAMS["salmon"]["alevin"]["index"]
 
-    tx2gene = PARAMS["alevin"]["tx2gene"]
+    tx2gene = PARAMS["salmon"]["alevin"]["tx2gene"]
 
     datetime = DATETIME
 
-    job_threads = PARAMS["alevin"]["threads"]
-    job_memory = PARAMS["alevin"]["memory"]
+    job_threads = PARAMS["salmon"]["alevin"]["threads"]
+    job_memory = PARAMS["salmon"]["alevin"]["memory"]
 
     statement = """
     %(datetime)s > alevin/%(sample)s.time &&
@@ -148,7 +148,7 @@ def salmon_alevin(infile, outfile):
         %(datetime)s >> alevin/%(sample)s.time
     """
 
-    P.run(statement)
+    P.run(statement, job_condaenv=PARAMS["conda"]["salmon"])
 
 
 def main(argv=None):
